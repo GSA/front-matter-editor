@@ -8,13 +8,20 @@
   <title>Front Matter Maker</title>
   <!-- CSS -->
   <link rel="stylesheet" href="style.css">
+  <!-- jQuery -->
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+  <!-- JS -->
+  <script src="new-post.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
 
   <div class="page">
     <h1>Matter Maker</h1>
-    <p>A simple tool for generating front matter in markdown posts for Jekyll and Hugo</p>
+    <p>A simple tool for creating front matter in markdown posts for Jekyll and Hugo</p>
 
     <div class="container">
       <form id="matter-maker" action="new-post" method="get" accept-charset="utf-8">
@@ -29,81 +36,8 @@
       <pre id="post-matter">---</pre>
     </div>
 
-    <p class="footer">This is an open-source tool from team at <a href="http://digitalgov.gov" title="Digitalgov.gov">digitalgov.gov</a></p>
+    <p class="footer">An open-source project from <a href="http://digitalgov.gov" title="Digitalgov.gov">digitalgov.gov</a></p>
 
   </div>
-
-  <!-- jQuery -->
-  <script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
-  <!-- JS -->
-  <script>
-    jQuery(document).ready(function() {
-      function curr_date(){
-        var d = new Date();
-        var month = d.getMonth()+1;
-        var day = d.getDate();
-        var output = d.getFullYear() + '-' +
-            (month<10 ? '0' : '') + month + '-' +
-            (day<10 ? '0' : '') + day + ' ' + 
-            d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() +
-            ' -0400';
-        return output;
-      }
-      $('input[name="m_date"]').val(curr_date());
-
-      $( "#matter-maker input" ).keyup(function( event ) {
-        var data = {};
-        $('#matter-maker').serializeArray().map(function(x){data[x.name] = x.value;}); 
-        print_matter(data);
-      });
-
-      var entityMap = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;',
-        '/': '&#x2F;',
-        '`': '&#x60;',
-        '=': '&#x3D;',
-        '*': '&#42;',
-        '$': '&#36;',
-        '%': '&#37;'
-      };
-
-      function escapeHtml (string) {
-        return String(string).replace(/[&<>"'`=*$%\/]/g, function (s) {
-          return entityMap[s];
-        });
-      }
-
-      function list_items(d) {
-        var list = d.split(',');
-        $item = '';
-        $item += '\n';
-        $.each( list, function( key, value ) {
-          $item += '  - ' + $.trim(value) + '\n';
-        });
-        return $item;
-      }
-
-      function print_matter(data){
-        var matter = [
-          "---",
-            "date: " + data['m_date'],
-            "title: '" + escapeHtml(data['m_title']) + "'",
-            "summary: '" + escapeHtml(data['m_summary']) + "'",
-            "author: " + list_items(data['m_author']),
-            "categories: " + list_items(data['m_categories']),
-            "tag: " + list_items(data['m_tag']),
-          "---"
-        ].join("\n");
-        $('#post-matter').text(matter);
-      }
-    });
-  </script>
 </body>
 </html>
